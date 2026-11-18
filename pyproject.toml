@@ -1,0 +1,9 @@
+[project]
+name = "ocr-text-api"
+version = "0.1.0"
+description = "Local HTTP API: Thai + English printed text OCR with iapp/OpenThai2.1-OCR-Text-20261118 (CPU)"
+requires-python = ">=3.10"
+license = "MIT"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

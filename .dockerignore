@@ -1,0 +1,16 @@
+.git
+.venv
+.env
+.env.*
+__pycache__
+**/__pycache__
+.pytest_cache
+models
+logs
+outputs
+samples
+frontend/node_modules
+frontend/dist
+**/*.tsbuildinfo
+*.onnx
+*.pt

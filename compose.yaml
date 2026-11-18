@@ -1,0 +1,35 @@
+services:
+  ocr:
+    build:
+      context: .
+    image: ocr-text-api:local
+    restart: unless-stopped
+    init: true
+    ports:
+      - "${OCR_BIND_IP:-127.0.0.1}:${OCR_PORT:-8091}:8091"
+    environment:
+      OCR_MODEL_ID: ${OCR_MODEL_ID:-iapp/OpenThai2.1-OCR-Text-20261118}
+      OCR_MODEL_REVISION: ${OCR_MODEL_REVISION:-7092cacf4561679ff9ed19de6821faeb9c96d894}
+      OCR_MODEL_DIR: /app/models/OpenThai2.1-OCR-Text-20261118
+      OCR_AUTO_DOWNLOAD: ${OCR_AUTO_DOWNLOAD:-true}
+      OCR_BACKEND: onnxruntime
+      OCR_PRELOAD: "true"
+      OCR_THREADS: ${OCR_THREADS:-1}
+      OCR_MAX_FILE_MB: ${OCR_MAX_FILE_MB:-50}
+      OCR_MAX_PAGES: ${OCR_MAX_PAGES:-100}
+      OCR_PDF_DPI: ${OCR_PDF_DPI:-200}
+    volumes:
+      - ocr-models:/app/models
+    healthcheck:
+      test: ["CMD", "python", "-c", "import json, urllib.request; data = json.load(urllib.request.urlopen('http://127.0.0.1:8091/health', timeout=5)); raise SystemExit(0 if data['model_state'] == 'ready' else 1)"]
+      interval: 15s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  ocr-models:
